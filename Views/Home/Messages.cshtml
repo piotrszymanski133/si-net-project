@@ -1,0 +1,19 @@
+@model System.Collections.Generic.List<String>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewBag.Title = "Temperatures";
+    Layout = "_Layout";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Temperatures</h1>
+    
+    
+    @foreach (var p in Model)
+    {
+        <p>@p</p>
+        
+    }
+    
+</div>
