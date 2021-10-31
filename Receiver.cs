@@ -44,7 +44,7 @@ namespace Application
                         Console.WriteLine(message);
                     };
 
-                    channel.BasicConsume(queue: _queueName,
+                    channel.BasicConsume(queue: _queueName, autoAck: true,
                         consumer: consumer);
                 }
             }

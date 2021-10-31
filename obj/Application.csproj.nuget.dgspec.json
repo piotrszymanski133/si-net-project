@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\Application\\Application.csproj": {}
+    "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\Application.csproj": {}
   },
   "projects": {
-    "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\Application\\Application.csproj": {
+    "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\Application\\Application.csproj",
+        "projectUniqueName": "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\weron\\.nuget\\packages\\",
-        "outputPath": "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\Application\\obj\\",
+        "projectPath": "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\Application.csproj",
+        "packagesPath": "C:\\Users\\piote\\.nuget\\packages\\",
+        "outputPath": "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\weron\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\piote\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

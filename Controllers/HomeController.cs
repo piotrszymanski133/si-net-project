@@ -11,7 +11,7 @@ namespace Application.Controllers
 
         public HomeController()
         {
-            _receiver = new Receiver("localhost", "temperature");
+            _receiver = new Receiver("rabbitmq", "temperature");
         }
 
         public IActionResult Index()
