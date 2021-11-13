@@ -1,28 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Application.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 
 namespace Application.Controllers
 {
     public class HomeController : Controller
     {
-        private Receiver _receiver;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController()
+        public HomeController(ILogger<HomeController> logger)
         {
-            _receiver = new Receiver("rabbitmq", "temperature");
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
-            List<String> messages = _receiver.GetMessages();
-            return View("Messages", messages);
+            return View();
         }
 
-        public IActionResult Privacy()
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
         {
-            return View();
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 

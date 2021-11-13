@@ -1,0 +1,42 @@
+@model System.Collections.Generic.List<DataModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Data view";
+    Layout = "_Layout";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Data</h1>
+    
+    <form asp-action="GetAllData" method="get">
+        <div class="form-actions no-color">
+            Find by ID: <input type="number" min="-1" onkeydown="return false" name="hiveId"/>
+            Find by start date: <input type="datetime-local" name="startDate" value="@ViewData["startDate"]"/>
+            Find by end date: <input type="datetime-local" name="endDate" value="@ViewData["endDate"]"/>
+            <input type="submit" value="Search" class="btn btn-default" />
+        </div>
+    </form>
+    
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Value</th>
+            <th> Sensor type></th>
+            <th>DateTime</th>
+            <th>HiveId</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Value</td>
+                <td>@p.SensorType</td>
+                <td>@p.DateTime</td>
+                <td>@p.HiveId</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

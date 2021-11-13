@@ -22,7 +22,18 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Data" asp-action="GetAllData">Data</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="DataSensor" asp-action="GetData" asp-route-sensor="temperatures">Temperatures</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="DataSensor" asp-action="GetData" asp-route-sensor="winds">Winds</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="DataSensor" asp-action="GetData" asp-route-sensor="pressures">Pressures</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="DataSensor" asp-action="GetData" asp-route-sensor="humidities">Humidities</a>
                     </li>
                 </ul>
             </div>
@@ -37,7 +48,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2021 - Application - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2021 - Copyright, Weronika Piotrowska, Jacek Bleja, Piotr Szymański, Jakub Czarnecki
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

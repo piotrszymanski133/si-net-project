@@ -1,0 +1,29 @@
+@model System.Linq.IQueryable<Application.Models.DataModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Data view";
+    Layout = "_Layout";
+}
+
+<div class="text-center">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Value</th>
+            <th>DateTime</th>
+            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["NameOrder"]">HiveId</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Value</td>
+                <td>@p.DateTime</td>
+                <td>@Html.DisplayFor(modelItem => p.HiveId)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

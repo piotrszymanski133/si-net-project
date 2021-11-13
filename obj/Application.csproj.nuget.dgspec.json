@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\Application.csproj": {}
+    "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\si-net-project\\Application.csproj": {}
   },
   "projects": {
-    "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\Application.csproj": {
+    "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\si-net-project\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\Application.csproj",
+        "projectUniqueName": "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\si-net-project\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\Application.csproj",
-        "packagesPath": "C:\\Users\\piote\\.nuget\\packages\\",
-        "outputPath": "D:\\Studiaaa\\Semestr 7\\Serwisy Internetowe dotNet\\Projekt\\si-net-project\\obj\\",
+        "projectPath": "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\si-net-project\\Application.csproj",
+        "packagesPath": "C:\\Users\\weron\\.nuget\\packages\\",
+        "outputPath": "D:\\Studia- informatyka\\7 semestr\\Serwisy Internetowe .NET\\Projekt\\si-net-project\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\piote\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\weron\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -43,6 +43,14 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Chart.js": {
+              "target": "Package",
+              "version": "[2.9.3, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.12, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.1, )"
@@ -70,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }
