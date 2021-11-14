@@ -11,19 +11,23 @@
     
     <form asp-action="GetData" method="get"> 
         <div class="form-actions no-color">
-            Find by ID: <input type="number" min="-1" onkeydown="return false" name="hiveId"/>
+            Find by ID: <input type="number" min="-1" onkeydown="return false" name="hiveId" value="@ViewData["hiveId"]"/>
             Find by start date: <input type="datetime-local" name="startDate" value="@ViewData["startDate"]"/>
             Find by end date: <input type="datetime-local" name="endDate" value="@ViewData["endDate"]"/>
             <input type="submit" value="Search" class="btn btn-default" />
         </div>
     </form>
-    
-    <table class="table">
+	
+	<div id="toAdd">
+		<button class="btn btn-default" onclick="showChart()">Generate chart</button>
+	</div>
+	
+	<table class="table">
         <thead>
         <tr>
-            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["ValueOrder"]">Value</a></th>
-            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["DateTimeOrder"]">DateTime</a></th>
-            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["HiveIdOrder"]">HiveId</a></th>
+            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["ValueOrder"]" asp-route-startDate="@ViewData["startDate"]" asp-route-endDate="@ViewData["endDate"]" asp-route-hiveId="@ViewData["hiveId"]">Value</a></th>
+            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["DateTimeOrder"]" asp-route-startDate="@ViewData["startDate"]" asp-route-endDate="@ViewData["endDate"]" asp-route-hiveId="@ViewData["hiveId"]">DateTime</a></th>
+            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["HiveIdOrder"]" asp-route-startDate="@ViewData["startDate"]" asp-route-endDate="@ViewData["endDate"]" asp-route-hiveId="@ViewData["hiveId"]">HiveId</a></th>
         </tr>
         </thead>
         <tbody>
@@ -38,3 +42,55 @@
         </tbody>
     </table>
 </div>
+
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+<script>
+
+function showChart(){
+	
+	let div;
+	div = document.createElement('div');
+	div.setAttribute('id', 'chartContainer');
+	div.style.width = '100%';
+	div.style.height = '300px';
+	document.getElementById('toAdd').appendChild(div);
+	
+	var data = @Html.Raw(Json.Serialize((ViewData["ChartData"])));	
+	var values = data.map(a => a.value)
+	var dates = data.map(a => a.dateTime)
+	
+	console.log(data);
+	console.log(values);
+	console.log(dates);
+	
+	var dps = []
+	
+	for (var i = dps.length; i < dates.length; i++)
+        dps.push({
+          x: new Date(Date.parse(dates[i])),
+          y: values[i]
+        });
+	
+
+	console.log(dps);
+	
+    var chart = new CanvasJS.Chart("chartContainer", {
+    	theme: "light2",
+    	title:{
+    		text: "Chart"
+    	},
+		 axisX: {
+			title: "Dates"
+		  },
+		  axisY: {
+			title: "Values"
+		  },
+    	data: [{        
+    		type: "line",
+    		dataPoints: dps 
+    	}]
+    });
+    chart.render();
+}
+    </script>

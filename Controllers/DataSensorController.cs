@@ -18,28 +18,31 @@ namespace Application.Controllers
         {
             
         }
-        
-        
+
+
         [HttpGet("{sensor:required}")]
-        public async Task<IActionResult> GetData(string sensor, string sortOrder, int? page, [FromQuery(Name = "startDate")] DateTime startDate, [FromQuery(Name = "endDate")] DateTime endDate, [FromQuery(Name = "hiveId")] int hiveId = -1)  
+        public async Task<IActionResult> GetData(string sensor, string sortOrder,
+            [FromQuery(Name = "startDate")] DateTime startDate, [FromQuery(Name = "endDate")] DateTime endDate,
+            [FromQuery(Name = "hiveId")] int hiveId)
         {
+            ViewData["hiveId"] = hiveId;
             ViewData["startDate"] = startDate;
             ViewData["endDate"] = endDate;
-            
-            List<DataModel> dataModels = new List<DataModel>();  
-              
-            using (var client = new HttpClient())  
-            {  
+
+            List<DataModel> dataModels = new List<DataModel>();
+
+            using (var client = new HttpClient())
+            {
                 //Passing service base url  
-                client.BaseAddress = new Uri(Baseurl);  
-  
-                client.DefaultRequestHeaders.Clear();  
+                client.BaseAddress = new Uri(Baseurl);
+
+                client.DefaultRequestHeaders.Clear();
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                
+
                 string url = "?";
 
-                if (hiveId != -1)
+                if (hiveId != 0)
                 {
                     url += "hive=" + hiveId + "&";
 
@@ -56,15 +59,15 @@ namespace Application.Controllers
                 }
 
                 url = url[..^1];
-                  
+
                 //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
-                HttpResponseMessage response = await client.GetAsync("api/Data/" + sensor + url);  
-                
+                HttpResponseMessage response = await client.GetAsync("api/Data/" + sensor + url);
+
                 //Checking the response is successful or not which is sent using HttpClient  
-                if (response.IsSuccessStatusCode)  
-                {  
+                if (response.IsSuccessStatusCode)
+                {
                     //Storing the response details recieved from web api   
-                    var dataResponse = response.Content.ReadAsStringAsync().Result;  
+                    var dataResponse = response.Content.ReadAsStringAsync().Result;
 
                     //Deserializing the response recieved from web api and storing into list  
                     var deserialize = JsonConvert.DeserializeObject<List<DataModel>>(dataResponse);
@@ -103,9 +106,11 @@ namespace Application.Controllers
                         break;
 
                 }
-                
+
+                ViewData["ChartData"] = dataModelsQuery.ToList();
+
                 return View("DataSensor", dataModelsQuery);
-            }  
+            }
         }
     }
 }
