@@ -21,8 +21,11 @@ namespace Application.Controllers
         
         
         [HttpGet("{sensor:required}")]
-        public async Task<IActionResult> GetData(string sensor, string sortOrder)  
-        {  
+        public async Task<IActionResult> GetData(string sensor, string sortOrder, int? page, [FromQuery(Name = "startDate")] DateTime startDate, [FromQuery(Name = "endDate")] DateTime endDate, [FromQuery(Name = "hiveId")] int hiveId = -1)  
+        {
+            ViewData["startDate"] = startDate;
+            ViewData["endDate"] = endDate;
+            
             List<DataModel> dataModels = new List<DataModel>();  
               
             using (var client = new HttpClient())  
@@ -32,10 +35,30 @@ namespace Application.Controllers
   
                 client.DefaultRequestHeaders.Clear();  
                 //Define request data format  
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));  
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                
+                string url = "?";
+
+                if (hiveId != -1)
+                {
+                    url += "hive=" + hiveId + "&";
+
+                }
+
+                if (startDate != new DateTime())
+                {
+                    url += "sDate=" + startDate.ToString("yyyy-M-ddTHH:mm") + "&";
+                }
+
+                if (endDate != new DateTime())
+                {
+                    url += "eDate=" + endDate.ToString("yyyy-M-ddTHH:mm") + "&";
+                }
+
+                url = url[..^1];
                   
                 //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
-                HttpResponseMessage response = await client.GetAsync("api/Data/" + sensor);  
+                HttpResponseMessage response = await client.GetAsync("api/Data/" + sensor + url);  
                 
                 //Checking the response is successful or not which is sent using HttpClient  
                 if (response.IsSuccessStatusCode)  
@@ -52,18 +75,36 @@ namespace Application.Controllers
                 }
 
                 var dataModelsQuery = dataModels.AsQueryable();
-                ViewData["NameOrder"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+                ViewData["HiveIdOrder"] = sortOrder == "hiveId_asc" ? "hiveId_desc" : "hiveId_asc";
+                ViewData["DateTimeOrder"] = sortOrder == "dateTime_asc" ? "dateTime_desc" : "dateTime_asc";
+                ViewData["ValueOrder"] = sortOrder == "value_asc" ? "value_desc" : "value_asc";
                 switch (sortOrder)
                 {
-                    case "name_desc":
+                    case "hiveId_desc":
                         dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.HiveId);
                         break;
-                    default:
+                    case "hiveId_asc":
                         dataModelsQuery = dataModelsQuery.OrderBy(a => a.HiveId);
                         break;
+                    case "dateTime_desc":
+                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.DateTime);
+                        break;
+                    case "dateTime_asc":
+                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.DateTime);
+                        break;
+                    case "value_desc":
+                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.Value);
+                        break;
+                    case "value_asc":
+                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.Value);
+                        break;
+                    default:
+                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.DateTime);
+                        break;
+
                 }
                 
-                return View("DataSensor", dataModelsQuery);  
+                return View("DataSensor", dataModelsQuery);
             }  
         }
     }

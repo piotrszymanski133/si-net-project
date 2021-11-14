@@ -1,5 +1,5 @@
-@model System.Linq.IQueryable<Application.Models.DataModel>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model System.Linq.IQueryable<Application.Models.DataModel>
 
 @{
     ViewData["Title"] = "Data view";
@@ -7,20 +7,31 @@
 }
 
 <div class="text-center">
+    <h1 class="display-4">@Model.First().SensorType</h1>
+    
+    <form asp-action="GetData" method="get"> 
+        <div class="form-actions no-color">
+            Find by ID: <input type="number" min="-1" onkeydown="return false" name="hiveId"/>
+            Find by start date: <input type="datetime-local" name="startDate" value="@ViewData["startDate"]"/>
+            Find by end date: <input type="datetime-local" name="endDate" value="@ViewData["endDate"]"/>
+            <input type="submit" value="Search" class="btn btn-default" />
+        </div>
+    </form>
+    
     <table class="table">
         <thead>
         <tr>
-            <th>Value</th>
-            <th>DateTime</th>
-            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["NameOrder"]">HiveId</a></th>
+            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["ValueOrder"]">Value</a></th>
+            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["DateTimeOrder"]">DateTime</a></th>
+            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["HiveIdOrder"]">HiveId</a></th>
         </tr>
         </thead>
         <tbody>
         @foreach (var p in Model)
         {
             <tr>
-                <td>@p.Value</td>
-                <td>@p.DateTime</td>
+                <td>@Html.DisplayFor(modelItem => p.Value)</td>
+                <td>@Html.DisplayFor(modelItem => p.DateTime)</td>
                 <td>@Html.DisplayFor(modelItem => p.HiveId)</td>
             </tr>
         }
