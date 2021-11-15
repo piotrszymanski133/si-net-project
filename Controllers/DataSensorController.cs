@@ -12,13 +12,11 @@ namespace Application.Controllers
 {
     public class DataSensorController: Controller
     {
-        string Baseurl = "http://localhost:9080/"; 
-        
+        string Baseurl = "http://localhost:9080/";
         public DataSensorController()
         {
             
         }
-
 
         [HttpGet("{sensor:required}")]
         public async Task<IActionResult> GetData(string sensor, string sortOrder,
@@ -33,11 +31,8 @@ namespace Application.Controllers
 
             using (var client = new HttpClient())
             {
-                //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
-
                 client.DefaultRequestHeaders.Clear();
-                //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 string url = "?";
@@ -59,20 +54,13 @@ namespace Application.Controllers
                 }
 
                 url = url[..^1];
-
-                //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
+                
                 HttpResponseMessage response = await client.GetAsync("api/Data/" + sensor + url);
-
-                //Checking the response is successful or not which is sent using HttpClient  
+                
                 if (response.IsSuccessStatusCode)
                 {
-                    //Storing the response details recieved from web api   
                     var dataResponse = response.Content.ReadAsStringAsync().Result;
-
-                    //Deserializing the response recieved from web api and storing into list  
                     var deserialize = JsonConvert.DeserializeObject<List<DataModel>>(dataResponse);
-                    deserialize.ForEach(e => e.SensorType = sensor);
-
                     dataModels = deserialize;
 
                 }
@@ -107,7 +95,7 @@ namespace Application.Controllers
 
                 }
 
-                ViewData["ChartData"] = dataModelsQuery.ToList();
+                ViewData["Data"] = dataModelsQuery.ToList();
 
                 return View("DataSensor", dataModelsQuery);
             }

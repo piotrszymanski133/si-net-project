@@ -12,6 +12,6 @@ namespace Application.Models
         
         public string Id { get; set; }
         
-        public string SensorType { get; set; }
+        public string Type { get; set; }
     }
 }

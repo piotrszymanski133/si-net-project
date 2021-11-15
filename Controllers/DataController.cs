@@ -22,9 +22,11 @@ namespace Application.Controllers
 
         [HttpGet]
         [Route("all")]
-        public async Task<IActionResult> GetAllData([FromQuery(Name = "startDate")] DateTime startDate, [FromQuery(Name = "endDate")] DateTime endDate, [FromQuery(Name = "hiveId")] int hiveId = -1)
+        public async Task<IActionResult> GetAllData(string sortOrder, [FromQuery(Name = "sensorType")] string sensorType, [FromQuery(Name = "startDate")] DateTime startDate, [FromQuery(Name = "endDate")] DateTime endDate, [FromQuery(Name = "hiveId")] int hiveId = 0)
 
         {
+            ViewData["sensorType"] = sensorType;
+            ViewData["hiveId"] = hiveId;
             ViewData["startDate"] = startDate;
             ViewData["endDate"] = endDate;
             
@@ -32,24 +34,23 @@ namespace Application.Controllers
 
             using (var client = new HttpClient())
             {
-                //Passing service base url  
                 client.BaseAddress = new Uri(Baseurl);
-
                 client.DefaultRequestHeaders.Clear();
-                //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage temperatures;
-                HttpResponseMessage winds;
-                HttpResponseMessage pressures;
-                HttpResponseMessage humidities;
+                HttpResponseMessage allData;
 
                 string url = "?";
 
-                if (hiveId != -1)
+                if (hiveId != 0)
                 {
                     url += "hive=" + hiveId + "&";
 
+                }
+                
+                if (sensorType != null)
+                {
+                    url += "sensor=" + sensorType + "&";
                 }
 
                 if (startDate != new DateTime())
@@ -64,41 +65,56 @@ namespace Application.Controllers
 
                 url = url[..^1];
                 
-                //Sending request to find web api REST service resource GetAllEmployees using HttpClient  
-                temperatures = await client.GetAsync("api/Data/temperatures" + url);
-                winds = await client.GetAsync("api/Data/winds" + url);
-                pressures = await client.GetAsync("api/Data/pressures" + url);
-                humidities = await client.GetAsync("api/Data/humidities" + url);
+                allData = await client.GetAsync("api/Data/all" + url);
                 
-                //Checking the response is successful or not which is sent using HttpClient  
-                if (temperatures.IsSuccessStatusCode && winds.IsSuccessStatusCode && pressures.IsSuccessStatusCode &&
-                    humidities.IsSuccessStatusCode)
+                if (allData.IsSuccessStatusCode)
                 {
-                    //Storing the response details recieved from web api   
-                    var dataResponseTemperatures = temperatures.Content.ReadAsStringAsync().Result;
-                    var dataResponseWinds = winds.Content.ReadAsStringAsync().Result;
-                    var dataResponsePressures = pressures.Content.ReadAsStringAsync().Result;
-                    var dataResponseHumidities = humidities.Content.ReadAsStringAsync().Result;
-
-                    //Deserializing the response recieved from web api and storing into list  
-                    var deserializeTemperatures =
-                        JsonConvert.DeserializeObject<List<DataModel>>(dataResponseTemperatures);
-                    deserializeTemperatures.ForEach(e => e.SensorType = "temperatures");
-                    var deserializeWinds = JsonConvert.DeserializeObject<List<DataModel>>(dataResponseWinds);
-                    deserializeWinds.ForEach(e => e.SensorType = "winds");
-                    var deserializePressures = JsonConvert.DeserializeObject<List<DataModel>>(dataResponsePressures);
-                    deserializePressures.ForEach(e => e.SensorType = "pressures");
-                    var deserializeHumidities = JsonConvert.DeserializeObject<List<DataModel>>(dataResponseHumidities);
-                    deserializeHumidities.ForEach(e => e.SensorType = "humidities");
-
-                    dataModels.AddRange(deserializeTemperatures);
-                    dataModels.AddRange(deserializeWinds);
-                    dataModels.AddRange(deserializePressures);
-                    dataModels.AddRange(deserializeHumidities);
+  
+                    var dataAllResponse = allData.Content.ReadAsStringAsync().Result;
+                    var deserializeAllData = JsonConvert.DeserializeObject<List<DataModel>>(dataAllResponse);
+                    dataModels = deserializeAllData;
+                }
+                
+                var dataModelsQuery = dataModels.AsQueryable();
+                ViewData["SensorTypeOrder"] = sortOrder == "sensorType_asc" ? "sensorType_desc" : "sensorType_asc";
+                ViewData["HiveIdOrder"] = sortOrder == "hiveId_asc" ? "hiveId_desc" : "hiveId_asc";
+                ViewData["DateTimeOrder"] = sortOrder == "dateTime_asc" ? "dateTime_desc" : "dateTime_asc";
+                ViewData["ValueOrder"] = sortOrder == "value_asc" ? "value_desc" : "value_asc";
+                switch (sortOrder)
+                {
+                    case "sensorType_desc":
+                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.Type);
+                        break;
+                    case "sensorType_asc":
+                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.Type);
+                        break;
+                    case "hiveId_desc":
+                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.HiveId);
+                        break;
+                    case "hiveId_asc":
+                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.HiveId);
+                        break;
+                    case "dateTime_desc":
+                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.DateTime);
+                        break;
+                    case "dateTime_asc":
+                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.DateTime);
+                        break;
+                    case "value_desc":
+                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.Value);
+                        break;
+                    case "value_asc":
+                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.Value);
+                        break;
+                    default:
+                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.DateTime);
+                        break;
 
                 }
 
-                return View("Data", dataModels);
+                ViewData["Data"] = dataModelsQuery.ToList();
+
+                return View("Data", dataModelsQuery);
             }
         }
     }  

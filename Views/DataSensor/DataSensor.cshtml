@@ -7,45 +7,91 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">@Model.First().SensorType</h1>
-    
-    <form asp-action="GetData" method="get"> 
-        <div class="form-actions no-color">
-            Find by ID: <input type="number" min="-1" onkeydown="return false" name="hiveId" value="@ViewData["hiveId"]"/>
-            Find by start date: <input type="datetime-local" name="startDate" value="@ViewData["startDate"]"/>
-            Find by end date: <input type="datetime-local" name="endDate" value="@ViewData["endDate"]"/>
-            <input type="submit" value="Search" class="btn btn-default" />
-        </div>
-    </form>
+	<button class="btn btn-default" onclick="generateJSONfile()">Download JSON file</button>
+	<button class="btn btn-default" onclick="generateCSVfile()">Download CSV file</button>
 	
+	<form asp-action="GetData" method="get">
+		<div class="form-actions no-color">
+			Find by start date: <input type="datetime-local" name="startDate" value="@ViewData["startDate"]"/>
+			Find by end date: <input type="datetime-local" name="endDate" value="@ViewData["endDate"]"/>
+			Find by ID: <input type="number" min="-1" onkeydown="return false" name="hiveId" value="@ViewData["hiveId"]"/>
+			<input type="submit" value="Search" class="btn btn-default"/>
+		</div>
+	</form>
+
 	<div id="toAdd">
 		<button class="btn btn-default" onclick="showChart()">Generate chart</button>
 	</div>
-	
+
 	<table class="table">
-        <thead>
-        <tr>
-            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["ValueOrder"]" asp-route-startDate="@ViewData["startDate"]" asp-route-endDate="@ViewData["endDate"]" asp-route-hiveId="@ViewData["hiveId"]">Value</a></th>
-            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["DateTimeOrder"]" asp-route-startDate="@ViewData["startDate"]" asp-route-endDate="@ViewData["endDate"]" asp-route-hiveId="@ViewData["hiveId"]">DateTime</a></th>
-            <th><a asp-action="GetData" asp-route-sortOrder="@ViewData["HiveIdOrder"]" asp-route-startDate="@ViewData["startDate"]" asp-route-endDate="@ViewData["endDate"]" asp-route-hiveId="@ViewData["hiveId"]">HiveId</a></th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var p in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => p.Value)</td>
-                <td>@Html.DisplayFor(modelItem => p.DateTime)</td>
-                <td>@Html.DisplayFor(modelItem => p.HiveId)</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+		<thead>
+		<tr>
+			<th><a asp-action="GetData" asp-route-sortOrder="@ViewData["ValueOrder"]" asp-route-startDate="@ViewData["startDate"]" asp-route-endDate="@ViewData["endDate"]" asp-route-hiveId="@ViewData["hiveId"]">Value</a></th>
+			<th><a asp-action="GetData" asp-route-sortOrder="@ViewData["DateTimeOrder"]" asp-route-startDate="@ViewData["startDate"]" asp-route-endDate="@ViewData["endDate"]" asp-route-hiveId="@ViewData["hiveId"]">DateTime</a></th>
+			<th><a asp-action="GetData" asp-route-sortOrder="@ViewData["HiveIdOrder"]" asp-route-startDate="@ViewData["startDate"]" asp-route-endDate="@ViewData["endDate"]" asp-route-hiveId="@ViewData["hiveId"]">HiveId</a></th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var p in Model)
+		{
+			<tr>
+				<td>@Html.DisplayFor(modelItem => p.Value)</td>
+				<td>@Html.DisplayFor(modelItem => p.DateTime)</td>
+				<td>@Html.DisplayFor(modelItem => p.HiveId)</td>
+			</tr>
+		}
+		</tbody>
+	</table>
 </div>
 
 <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+<script src="js/FileSaver.js"></script>
 <script>
+
+function generateJSONfile(){
+	var data = @Html.Raw(Json.Serialize((ViewData["Data"])));
+	
+	var dataJSON = JSON.stringify(data);
+	
+	var blob = new Blob([dataJSON], {
+	 type: "text/plain;charset=utf-8"
+	});
+	
+	saveAs(blob, "fileJSON.txt");
+}
+
+function ConvertToCSV(objArray) {
+            var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+            var str = '';
+
+            for (var i = 0; i < array.length; i++) {
+                var line = '';
+                for (var index in array[i]) {
+                    if (line != '') line += ','
+
+                    line += array[i][index];
+                }
+
+                str += line + '\r\n';
+            }
+
+            return str;
+        }
+
+function generateCSVfile(){
+	var data = @Html.Raw(Json.Serialize((ViewData["Data"])));
+	
+	var dataJSON = JSON.stringify(data);
+	
+	var dataCSV = ConvertToCSV(dataJSON);
+	
+	var blob = new Blob([dataCSV], {
+	 type: "text/plain;charset=utf-8"
+	});
+	
+	saveAs(blob, "fileCSV.csv");
+}
 
 function showChart(){
 	
@@ -56,7 +102,7 @@ function showChart(){
 	div.style.height = '300px';
 	document.getElementById('toAdd').appendChild(div);
 	
-	var data = @Html.Raw(Json.Serialize((ViewData["ChartData"])));	
+	var data = @Html.Raw(Json.Serialize((ViewData["Data"])));	
 	var values = data.map(a => a.value)
 	var dates = data.map(a => a.dateTime)
 	
