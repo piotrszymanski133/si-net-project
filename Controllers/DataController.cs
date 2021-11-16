@@ -111,8 +111,10 @@ namespace Application.Controllers
                         break;
 
                 }
-
-                ViewData["Data"] = dataModelsQuery.ToList();
+                
+                List<DataModel> dataModelsQueryList = dataModelsQuery.ToList();
+                dataModelsQueryList.ForEach(dataModel => dataModel.DateTime = dataModel.DateTime.ToLocalTime());
+                ViewData["Data"] = dataModelsQueryList;
 
                 return View("Data", dataModelsQuery);
             }
