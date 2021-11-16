@@ -12,7 +12,7 @@ namespace Application.Controllers
 {
     public class DataSensorController: Controller
     {
-        string Baseurl = "http://localhost:9080/";
+        string Baseurl = "http://api:9080/";
         public DataSensorController()
         {
             
