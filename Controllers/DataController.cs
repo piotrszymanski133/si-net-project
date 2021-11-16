@@ -13,7 +13,7 @@ namespace Application.Controllers
 {
     public class DataController :Controller
     {
-        string Baseurl = "http://api:9080/"; 
+        string Baseurl = "http://api:80/"; 
         
         public DataController()
         {
