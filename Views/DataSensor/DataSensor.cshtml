@@ -20,7 +20,7 @@
 	</form>
 
 	<div id="toAdd">
-		<button class="btn btn-default" onclick="showChart()">Generate chart</button>
+		<button class="btn btn-default" id="generateChartButton" onclick="showChart()">Generate chart</button>
 	</div>
 
 	<table class="table">
@@ -47,6 +47,7 @@
 <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
 <script src="js/FileSaver.js"></script>
+<script src="js/functions.js"></script>
 <script>
 
 function generateJSONfile(){
@@ -58,26 +59,8 @@ function generateJSONfile(){
 	 type: "text/plain;charset=utf-8"
 	});
 	
-	saveAs(blob, "fileJSON.txt");
+	saveAs(blob, "fileJSON.json");
 }
-
-function ConvertToCSV(objArray) {
-            var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-            var str = '';
-
-            for (var i = 0; i < array.length; i++) {
-                var line = '';
-                for (var index in array[i]) {
-                    if (line != '') line += ','
-
-                    line += array[i][index];
-                }
-
-                str += line + '\r\n';
-            }
-
-            return str;
-        }
 
 function generateCSVfile(){
 	var data = @Html.Raw(Json.Serialize((ViewData["Data"])));
@@ -94,49 +77,7 @@ function generateCSVfile(){
 }
 
 function showChart(){
-	
-	let div;
-	div = document.createElement('div');
-	div.setAttribute('id', 'chartContainer');
-	div.style.width = '100%';
-	div.style.height = '300px';
-	document.getElementById('toAdd').appendChild(div);
-	
-	var data = @Html.Raw(Json.Serialize((ViewData["Data"])));	
-	var values = data.map(a => a.value)
-	var dates = data.map(a => a.dateTime)
-	
-	console.log(data);
-	console.log(values);
-	console.log(dates);
-	
-	var dps = []
-	
-	for (var i = dps.length; i < dates.length; i++)
-        dps.push({
-          x: new Date(Date.parse(dates[i])),
-          y: values[i]
-        });
-	
-
-	console.log(dps);
-	
-    var chart = new CanvasJS.Chart("chartContainer", {
-    	theme: "light2",
-    	title:{
-    		text: "Chart"
-    	},
-		 axisX: {
-			title: "Dates"
-		  },
-		  axisY: {
-			title: "Values"
-		  },
-    	data: [{        
-    		type: "line",
-    		dataPoints: dps 
-    	}]
-    });
-    chart.render();
+	createChart(@Html.Raw(Json.Serialize((ViewData["Data"]))));
+	document.getElementById("generateChartButton").onclick = null;
 }
     </script>

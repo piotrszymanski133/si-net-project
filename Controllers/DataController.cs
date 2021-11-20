@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Application.Functions;
 
 namespace Application.Controllers
 {
@@ -27,8 +28,8 @@ namespace Application.Controllers
         {
             ViewData["sensorType"] = sensorType;
             ViewData["hiveId"] = hiveId;
-            ViewData["startDate"] = startDate;
-            ViewData["endDate"] = endDate;
+            ViewData["startDate"] = startDate.ToString("yyyy-M-ddTHH:mm");
+            ViewData["endDate"] = endDate.ToString("yyyy-M-ddTHH:mm");
             
             List<DataModel> dataModels = new List<DataModel>();
 
@@ -80,37 +81,8 @@ namespace Application.Controllers
                 ViewData["HiveIdOrder"] = sortOrder == "hiveId_asc" ? "hiveId_desc" : "hiveId_asc";
                 ViewData["DateTimeOrder"] = sortOrder == "dateTime_asc" ? "dateTime_desc" : "dateTime_asc";
                 ViewData["ValueOrder"] = sortOrder == "value_asc" ? "value_desc" : "value_asc";
-                switch (sortOrder)
-                {
-                    case "sensorType_desc":
-                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.Type);
-                        break;
-                    case "sensorType_asc":
-                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.Type);
-                        break;
-                    case "hiveId_desc":
-                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.HiveId);
-                        break;
-                    case "hiveId_asc":
-                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.HiveId);
-                        break;
-                    case "dateTime_desc":
-                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.DateTime);
-                        break;
-                    case "dateTime_asc":
-                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.DateTime);
-                        break;
-                    case "value_desc":
-                        dataModelsQuery = dataModelsQuery.OrderByDescending(a => a.Value);
-                        break;
-                    case "value_asc":
-                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.Value);
-                        break;
-                    default:
-                        dataModelsQuery = dataModelsQuery.OrderBy(a => a.DateTime);
-                        break;
 
-                }
+                dataModelsQuery = Functions.Functions.switchOrderFunction(sortOrder, dataModelsQuery);
                 
                 List<DataModel> dataModelsQueryList = dataModelsQuery.ToList();
                 dataModelsQueryList.ForEach(dataModel => dataModel.DateTime = dataModel.DateTime.ToLocalTime());
